@@ -1,8 +1,8 @@
 
 android {
   productFlavors {
-    "nativescript-social-login" {
-      dimension "nativescript-social-login"
+    "nativescript-social-login-wf" {
+      dimension "nativescript-social-login-wf"
     }
   }
 }
