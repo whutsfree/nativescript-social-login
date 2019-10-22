@@ -63,6 +63,7 @@ export class SocialLogin extends Social {
 
         if (this.Config.google) {
             this.googleSignIn = GIDSignIn.sharedInstance();
+            this.googleSignIn.clientID = this.Config.google.clientId;
             this.googleSignIn.shouldFetchBasicProfile = this.Config.google.shouldFetchBasicProfile;
             this.googleSignIn.scopes = NSArray.arrayWithArray(<any>this.Config
                 .google.scopes);
@@ -243,81 +244,86 @@ export class SocialLogin extends Social {
         );
     }
 
+    private _delgateClass;
     private createSignInDelegate() {
-        const self = this;
-        class MySignInDelegate extends NSObject {
-            static ObjCProtocols = [GIDSignInDelegate, GIDSignInUIDelegate];
+        if (!this._delgateClass) {
 
-            constructor() {
-                super();
-            }
+            const self = this;
+            class MySignInDelegate extends NSObject {
+                static ObjCProtocols = [GIDSignInDelegate, GIDSignInUIDelegate];
 
-            signInDidSignInForUserWithError(signIn, user, error: NSError) {
-                if (error) {
-                    self.googleFailCallback(error);
-                } else {
+                constructor() {
+                    super();
+                }
+
+                signInDidSignInForUserWithError(signIn, user, error: NSError) {
+                    if (error) {
+                        self.googleFailCallback(error);
+                    } else {
+                        try {
+                            const resultUser: ILoginResult = {
+                                code: LoginResultType.Success,
+                                userToken: user.profile.email,
+                                firstName: user.profile.givenName,
+                                lastName: user.profile.familyName,
+                                displayName: user.profile.name,
+                                photo: user.profile.imageURLWithDimension(100),
+                                authCode: user.serverAuthCode
+                                    ? user.serverAuthCode
+                                    : user.authentication.idToken,
+                                id: user.userID
+                            }; // Safe to send to the server // For client-side use only!
+
+                            self.googleSuccessCallback(resultUser);
+
+                            if (!self._googleProfileInfoCallback) {
+                                self.logMsg(
+                                    "no callback set",
+                                    LOGTAG_ON_GOOGLE_RESULT
+                                );
+                            }
+                        } catch (error) {
+                            self.googleFailCallback(error);
+                        }
+                    }
+                }
+
+                signInDidDisconnectWithUserWithError(signIn, user, error: NSError) {
                     try {
-                        const resultUser: ILoginResult = {
-                            code: LoginResultType.Success,
-                            userToken: user.profile.email,
-                            firstName: user.profile.givenName,
-                            lastName: user.profile.familyName,
-                            displayName: user.profile.name,
-                            photo: user.profile.imageURLWithDimension(100),
-                            authCode: user.serverAuthCode
-                                ? user.serverAuthCode
-                                : user.authentication.idToken,
-                            id: user.userID
-                        }; // Safe to send to the server // For client-side use only!
-
-                        self.googleSuccessCallback(resultUser);
-
-                        if (!self._googleProfileInfoCallback) {
-                            self.logMsg(
-                                "no callback set",
-                                LOGTAG_ON_GOOGLE_RESULT
-                            );
+                        if (error) {
+                            self.googleFailCallback(error);
+                        } else {
+                            // googleSuccessCallback("logOut");
+                            self.googleCancelCallback();
                         }
                     } catch (error) {
                         self.googleFailCallback(error);
                     }
                 }
-            }
 
-            signInDidDisconnectWithUserWithError(signIn, user, error: NSError) {
-                try {
-                    if (error) {
-                        self.googleFailCallback(error);
-                    } else {
-                        // googleSuccessCallback("logOut");
-                        self.googleCancelCallback();
-                    }
-                } catch (error) {
-                    self.googleFailCallback(error);
+                // signInWillDispatchError(signIn, error) {
+                // }
+
+                signInPresentViewController(signIn, viewController) {
+                    const uiview = ios.rootController;
+                    uiview.presentViewControllerAnimatedCompletion(
+                        viewController,
+                        true,
+                        null
+                    );
+                }
+
+                signInDismissViewController(signIn, viewController) {
+                    viewController.dismissViewControllerAnimatedCompletion(
+                        true,
+                        null
+                    );
                 }
             }
-
-            // signInWillDispatchError(signIn, error) {
-            // }
-
-            signInPresentViewController(signIn, viewController) {
-                const uiview = ios.rootController;
-                uiview.presentViewControllerAnimatedCompletion(
-                    viewController,
-                    true,
-                    null
-                );
-            }
-
-            signInDismissViewController(signIn, viewController) {
-                viewController.dismissViewControllerAnimatedCompletion(
-                    true,
-                    null
-                );
-            }
+            this._delgateClass = MySignInDelegate;
         }
 
-        return new MySignInDelegate();
+        return new this._delgateClass();
     }
 
     public loginWithGoogle(callback: (result: Partial<ILoginResult>) => void) {
