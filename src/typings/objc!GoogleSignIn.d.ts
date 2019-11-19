@@ -112,7 +112,7 @@ declare class GIDSignIn extends NSObject {
 
 	shouldFetchBasicProfile: boolean;
 
-	uiDelegate: GIDSignInUIDelegate;
+    presentingViewController: any;
 
 	disconnect(): void;
 

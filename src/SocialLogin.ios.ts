@@ -244,13 +244,13 @@ export class SocialLogin extends Social {
         );
     }
 
-    private _delgateClass;
-    private createSignInDelegate() {
-        if (!this._delgateClass) {
+    private _delgateInstance;
+    private getSignInDelegate() {
+        if (!this._delgateInstance) {
 
             const self = this;
             class MySignInDelegate extends NSObject {
-                static ObjCProtocols = [GIDSignInDelegate, GIDSignInUIDelegate];
+                static ObjCProtocols = [GIDSignInDelegate];
 
                 constructor() {
                     super();
@@ -268,9 +268,8 @@ export class SocialLogin extends Social {
                                 lastName: user.profile.familyName,
                                 displayName: user.profile.name,
                                 photo: user.profile.imageURLWithDimension(100),
-                                authCode: user.serverAuthCode
-                                    ? user.serverAuthCode
-                                    : user.authentication.idToken,
+                                authToken: user.authentication.idToken,
+                                authCode: user.serverAuthCode,
                                 id: user.userID
                             }; // Safe to send to the server // For client-side use only!
 
@@ -300,30 +299,11 @@ export class SocialLogin extends Social {
                         self.googleFailCallback(error);
                     }
                 }
-
-                // signInWillDispatchError(signIn, error) {
-                // }
-
-                signInPresentViewController(signIn, viewController) {
-                    const uiview = ios.rootController;
-                    uiview.presentViewControllerAnimatedCompletion(
-                        viewController,
-                        true,
-                        null
-                    );
-                }
-
-                signInDismissViewController(signIn, viewController) {
-                    viewController.dismissViewControllerAnimatedCompletion(
-                        true,
-                        null
-                    );
-                }
             }
-            this._delgateClass = MySignInDelegate;
+            this._delgateInstance = new MySignInDelegate();
         }
 
-        return new this._delgateClass();
+        return this._delgateInstance;
     }
 
     public loginWithGoogle(callback: (result: Partial<ILoginResult>) => void) {
@@ -357,6 +337,7 @@ export class SocialLogin extends Social {
             this.logMsg("onSuccess().onCompleted()", LOGTAG_LOGIN_WITH_GOOGLE);
 
             invokeLoginCallbackForGoogle({
+                authToken: result.authToken,
                 authCode: result.authCode,
                 code: LoginResultType.Success,
                 displayName: result.displayName,
@@ -369,15 +350,10 @@ export class SocialLogin extends Social {
 
         if (!!callback) {
             this._googleProfileInfoCallback = callback;
-
-            const delegate = this.createSignInDelegate();
-            if (!this.googleSignIn.delegate) {
-                this.googleSignIn.delegate = delegate;
-            }
-            if (!this.googleSignIn.uiDelegate) {
-                this.googleSignIn.uiDelegate = delegate;
-            }
-
+            const uiview = ios.rootController;
+            const delegate = this.getSignInDelegate();
+            this.googleSignIn.delegate = delegate;
+            this.googleSignIn.presentingViewController = uiview;
             this.googleSignIn.signIn();
         }
     }
