@@ -125,7 +125,7 @@ keytool -list -v -keystore C:/users/brad.martin/.android/debug.keystore -alias a
 ```
 The path will change according to the path on your machine. The android debug builds are signed with this default `debug.keystore` located on your machine. So when you run the debug build on a device Google will allow the authentication with the running .apk since it has the SHA1 for the debug.keystore the debug app is built with.
 
-2. Create an app [here](https://developers.google.com/mobile/add?platform=android&cntapi=signin&cntapp=Default%20Demo%20App&cntpkg=com.google.samples.quickstart.signin&cnturl=https:%2F%2Fdevelopers.google.com%2Fidentity%2Fsign-in%2Fandroid%2Fstart%3Fconfigured%3Dtrue&cntlbl=Continue%20with%20Try%20Sign-In) on Google Developer site. 
+2. Create an app [here](https://developers.google.com/mobile/add?platform=android&cntapi=signin&cntapp=Default%20Demo%20App&cntpkg=com.google.samples.quickstart.signin&cnturl=https:%2F%2Fdevelopers.google.com%2Fidentity%2Fsign-in%2Fandroid%2Fstart%3Fconfigured%3Dtrue&cntlbl=Continue%20with%20Try%20Sign-In) on Google Developer site.
     - Enter the App name. This can be anything but it will display to the user who is authenticating.
     - Enter the android package name. The `package` name is the android app name which is in the *package.json* under the `nativescript` object as the `id` property.
     - Next configure the Google services.
@@ -209,13 +209,13 @@ if (application.ios) {
         console.log(error);
       }
 
-      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions); // facebook login delegate
+      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance.applicationDidFinishLaunchingWithOptions(application, launchOptions); // facebook login delegate
 
       return gglDelegate || fcbDelegate;
     }
 
     applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation) {
-      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation); // facebook login delegate
+      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance.applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation); // facebook login delegate
       const gglDelegate = GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation); // google login delegate
 
       return fcbDelegate || gglDelegate;
@@ -246,11 +246,11 @@ if (application.ios) {
             catch (error) {
                 console.log(error);
             }
-            var fcbDelegate = FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions); // facebook login delegate
+            var fcbDelegate = FBSDKApplicationDelegate.sharedInstance.applicationDidFinishLaunchingWithOptions(application, launchOptions); // facebook login delegate
             return gglDelegate || fcbDelegate;
         };
         MyDelegate.prototype.applicationOpenURLSourceApplicationAnnotation = function (application, url, sourceApplication, annotation) {
-            var fcbDelegate = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation); // facebook login delegate
+            var fcbDelegate = FBSDKApplicationDelegate.sharedInstance.applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation); // facebook login delegate
             var gglDelegate = GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation); // google login delegate
             return fcbDelegate || gglDelegate;
         };

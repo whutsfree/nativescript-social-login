@@ -49,13 +49,13 @@ if (application.ios) {
         console.log(error);
       }
 
-      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance().applicationDidFinishLaunchingWithOptions(application, launchOptions); // facebook login delegate
+      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance.applicationDidFinishLaunchingWithOptions(application, launchOptions); // facebook login delegate
 
       return gglDelegate || fcbDelegate;
     }
 
     applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation) {
-      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance().applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation); // facebook login delegate
+      const fcbDelegate = FBSDKApplicationDelegate.sharedInstance.applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation); // facebook login delegate
       const gglDelegate = GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation); // google login delegate
 
       return fcbDelegate || gglDelegate;

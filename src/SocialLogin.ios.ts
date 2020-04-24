@@ -238,8 +238,9 @@ export class SocialLogin extends Social {
         //     permissions,
         //     this._facebookCallbackManager
         // );
-        this.facebookLoginManager.logInWithReadPermissionsHandler(
+        this.facebookLoginManager.logInWithPermissionsFromViewControllerHandler(
             permissions,
+            ios.rootController,
             this._facebookCallbackManager
         );
     }
