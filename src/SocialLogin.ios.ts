@@ -229,7 +229,7 @@ export class SocialLogin extends Social {
             };
         }
 
-        const permissions = NSArray.arrayWithArray(<any>[
+        const permissions: NSArray<string> = NSArray.arrayWithArray([
             "public_profile",
             "email"
         ]);

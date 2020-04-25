@@ -100,6 +100,9 @@ export interface IConfig {
          * The server client ID for requesting server auth token.
          */
         serverClientId?: string;
+
+        clientId?: string;
+
         /**
          * If true, it will request for offline auth code which server can use for fetching or refreshing auth tokens. It will be set in authCode property of result object.
          * If false (default), it will request for token id. it will be set in authToken property of result object.
