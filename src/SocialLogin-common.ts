@@ -200,7 +200,7 @@ export enum LoginResultType {
     Failed = -2
 }
 
-import { isNullOrUndefined } from "tns-core-modules/utils/types";
+import { isNullOrUndefined } from "@nativescript/core/utils/types";
 import { merge } from "./utils";
 
 export const LOGTAG_INIT_ENV = "initEnvironment()";
