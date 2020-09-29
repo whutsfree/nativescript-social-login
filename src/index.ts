@@ -20,7 +20,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-import { isNullOrUndefined } from "utils/types";
+import { isNullOrUndefined } from "@nativescript/core/utils/types";
 import { SocialLogin } from "./SocialLogin";
 import {
     ILogger,

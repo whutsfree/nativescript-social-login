@@ -1,5 +1,5 @@
-/// <reference path="./node_modules/tns-platform-declarations/ios.d.ts" />
-/// <reference path="./node_modules/tns-platform-declarations/android.d.ts" />
+/// <reference path="./node_modules/@nativescript/types-ios/index.d.ts" />
+/// <reference path="./node_modules/@nativescript/types-android/lib/android-29.d.ts" />
 /// <reference path="./typings/objc!GoogleSignIn.d.ts" />
 /// <reference path="./typings/objc!AppAuth.d.ts" />
 /// <reference path="./typings/objc!GTMAppAuth.d.ts" />

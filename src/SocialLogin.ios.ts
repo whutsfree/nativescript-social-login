@@ -20,7 +20,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-import { ios } from "tns-core-modules/application/application";
+import { ios } from "@nativescript/core/application/application";
 import {
     IInitializationResult,
     ILoginResult,

@@ -24,8 +24,8 @@ import {
     android as Android,
     AndroidApplication,
     AndroidActivityResultEventData
-} from "tns-core-modules/application/application";
-import { isNullOrUndefined } from "tns-core-modules/utils/types";
+} from "@nativescript/core/application/application";
+import { isNullOrUndefined } from "@nativescript/core/utils/types";
 import {
     IInitializationResult,
     ILoginResult,
