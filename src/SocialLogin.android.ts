@@ -24,7 +24,7 @@ import {
     android as Android,
     AndroidApplication,
     AndroidActivityResultEventData
-} from "@nativescript/core/application/application";
+} from "@nativescript/core/application";
 import { isNullOrUndefined } from "@nativescript/core/utils/types";
 import {
     IInitializationResult,
